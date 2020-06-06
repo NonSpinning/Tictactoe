@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="Tic-tac-toe" default="dist" basedir="."> <!--name goes here-->
+  <description>
+    A small project, with a playable version of Tic-tac-toe and an AI to play against.
+  </description>
+  
+  <property name="src" location="src"/>
+  <property name="build" location="build"/>
+  <property name="dist" location="dist"/>
+  <property name="docs" location="docs"/>
+
+  <target name="init">
+    <tstamp/>
+    <mkdir dir="${build}"/>
+  </target>
+
+  <target name="clean">
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+    <delete dir="${docs}"/>
+    <defaultexcludes remove="**/*~"/>
+    <delete><fileset dir="." includes="**/*~"/></delete>
+    <defaultexcludes default="true"/>
+    <delete><fileset dir="." includes="**/#*#" defaultexcludes="false"/>
+    </delete>
+  </target>
+
+  <target name="compile" depends="init">
+    <javac includeantruntime="false" srcdir="${src}" destdir="${build}"/>
+  </target>
+
+  <target name="dist" depends="compile">
+    <mkdir dir="${dist}"/>
+    <manifest file = "MANIFEST.MF">
+      <attribute name ="Main-Class" value = "Tictactoe"/> <!--Main class goes here-->
+      <attribute name = "Class-Path" value = "${build}/"/> <!--Class path here-->
+    </manifest>
+    <jar jarfile="${dist}/${ant.project.name}-${DSTAMP}.jar" basedir="${build}" manifest="MANIFEST.MF"/>
+    <delete file = "MANIFEST.MF"/>
+  </target>
+
+  <target name="docs">
+    <javadoc destdir="${docs}" version="true" author="true" windowtitle="${ant.project.name}">
+      <fileset dir="${src}" defaultexcludes="true">
+	<include name="**/*.java"/>
+      </fileset>
+    </javadoc>
+  </target>
+
+  <target name="run" depends ="compile">
+    <java classname="Tictactoe" classpath="${build}/"/> <!--The .java with main, and it's path-->
+  </target>
+  
+</project>
